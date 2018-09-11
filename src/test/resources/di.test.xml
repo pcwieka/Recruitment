@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
        profile="test">
 
     <!-- configuration -->
@@ -18,6 +18,94 @@
         <property name="order" value="1"/>
         <property name="searchSystemEnvironment" value="true"/>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    </bean>
+
+    <bean id="date" class="java.time.LocalDate" factory-method="now"/>
+
+    <bean id = "transactionQueue" class = "java.util.concurrent.ArrayBlockingQueue">
+        <constructor-arg type="int"><value>10</value></constructor-arg>
+    </bean>
+
+    <bean id="consumer" class="com.awin.recruitment.transfer.consumer.TransactionConsumer">
+
+        <constructor-arg name="transactionQueue" ref="transactionQueue"/>
+
+        <property name="transactionsExitId">
+            <value>${transaction.exit}</value>
+        </property>
+
+        <property name="threadSleepMillis">
+            <value>${threadSleepMillis1}</value>
+        </property>
+
+    </bean>
+
+    <bean id="producer" class="com.awin.recruitment.transfer.producer.TransactionProducer">
+
+        <constructor-arg name="transactionQueue" ref="transactionQueue"/>
+
+        <property name="transactionsExitId">
+            <value>${transaction.exit}</value>
+        </property>
+
+        <property name="threadSleepMillis">
+            <value>${threadSleepMillis2}</value>
+        </property>
+
+    </bean>
+
+    <bean id="dataTransferServiceRunner" class="com.awin.recruitment.transfer.DataTransferServiceRunner">
+
+        <constructor-arg name="consumer" ref="consumer"/>
+        <constructor-arg name="producer" ref="producer"/>
+
+    </bean>
+
+    <bean id="ordinaryShoes" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Ordinary Shoes"/>
+        <constructor-arg name="cost" value="100.75"/>
+    </bean>
+
+    <bean id="funnyShoes" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Funny Shoes"/>
+        <constructor-arg name="cost" value="699.49"/>
+    </bean>
+
+    <bean id="elegantShoes" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Elegant Shoes"/>
+        <constructor-arg name="cost" value="555.50"/>
+    </bean>
+
+    <bean id="transaction1" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="1"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="ordinaryShoes"/>
+                <ref bean="elegantShoes"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction2" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="2"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="funnyShoes"/>
+                <ref bean="ordinaryShoes"/>
+                <ref bean="elegantShoes"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transactionsList" class="java.util.ArrayList">
+        <constructor-arg>
+            <util:list>
+                <ref bean="transaction1"/>
+                <ref bean="transaction2"/>
+            </util:list>
+        </constructor-arg>
     </bean>
 
 </beans>

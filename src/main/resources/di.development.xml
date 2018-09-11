@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
        profile="development">
 
     <!-- configuration -->
@@ -16,5 +16,251 @@
         <property name="searchSystemEnvironment" value="true"/>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
+
+    <bean id="date" class="java.time.LocalDate" factory-method="now"/>
+
+    <bean id = "transactionQueue" class = "java.util.concurrent.ArrayBlockingQueue">
+            <constructor-arg type="int"><value>10</value></constructor-arg>
+    </bean>
+
+    <bean id="consumer" class="com.awin.recruitment.transfer.consumer.TransactionConsumer">
+
+        <constructor-arg name="transactionQueue" ref="transactionQueue"/>
+
+        <property name="transactionsExitId">
+            <value>${transaction.exit}</value>
+        </property>
+
+        <property name="threadSleepMillis">
+            <value>${threadSleepMillis1}</value>
+        </property>
+
+    </bean>
+
+    <bean id="producer" class="com.awin.recruitment.transfer.producer.TransactionProducer">
+
+        <constructor-arg name="transactionQueue" ref="transactionQueue"/>
+
+        <property name="transactionsExitId">
+            <value>${transaction.exit}</value>
+        </property>
+
+        <property name="threadSleepMillis">
+            <value>${threadSleepMillis2}</value>
+        </property>
+
+    </bean>
+
+    <bean id="dataTransferServiceRunner" class="com.awin.recruitment.transfer.DataTransferServiceRunner">
+
+        <constructor-arg name="consumer" ref="consumer"/>
+        <constructor-arg name="producer" ref="producer"/>
+
+    </bean>
+
+    <bean id="ordinaryShoes" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Ordinary Shoes"/>
+        <constructor-arg name="cost" value="400.50"/>
+    </bean>
+
+    <bean id="funnyShoes" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Funny Shoes"/>
+        <constructor-arg name="cost" value="400.50"/>
+    </bean>
+
+    <bean id="elegantShoes" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Elegant Shoes"/>
+        <constructor-arg name="cost" value="400.50"/>
+    </bean>
+
+    <bean id="redTrousers" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Red Trousers"/>
+        <constructor-arg name="cost" value="250.99"/>
+    </bean>
+
+    <bean id="blackTrousers" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Black Trousers"/>
+        <constructor-arg name="cost" value="250.99"/>
+    </bean>
+
+    <bean id="blackGloves" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Black Gloves"/>
+        <constructor-arg name="cost" value="31.45"/>
+    </bean>
+
+    <bean id="whiteJacket" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="White Jacket"/>
+        <constructor-arg name="cost" value="599.99"/>
+    </bean>
+
+    <bean id="cockyShorts" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Cocky Shorts"/>
+        <constructor-arg name="cost" value="299.99"/>
+    </bean>
+
+    <bean id="longJacket" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Long Jacket"/>
+        <constructor-arg name="cost" value="1599.99"/>
+    </bean>
+
+    <bean id="shortJacket" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Short Jacket"/>
+        <constructor-arg name="cost" value="499.99"/>
+    </bean>
+
+    <bean id="longSocks" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Long Socks"/>
+        <constructor-arg name="cost" value="9.99"/>
+    </bean>
+
+    <bean id="shortSocks" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Short Socks"/>
+        <constructor-arg name="cost" value="499.99"/>
+    </bean>
+
+    <bean id="justACap" class="com.awin.recruitment.data.Product">
+        <constructor-arg name="name" value="Just A Cap"/>
+        <constructor-arg name="cost" value="49.99"/>
+    </bean>
+
+    <bean id="transaction1" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="1"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="ordinaryShoes"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction2" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="2"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="funnyShoes"/>
+                <ref bean="justACap"/>
+                <ref bean="longSocks"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction3" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="3"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="elegantShoes"/>
+                <ref bean="shortSocks"/>
+                <ref bean="blackGloves"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction4" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="4"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="funnyShoes"/>
+                <ref bean="shortSocks"/>
+                <ref bean="longSocks"/>
+                <ref bean="blackTrousers"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction5" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="5"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="redTrousers"/>
+                <ref bean="whiteJacket"/>
+                <ref bean="longJacket"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction6" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="6"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="elegantShoes"/>
+                <ref bean="whiteJacket"/>
+                <ref bean="justACap"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction7" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="7"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="blackGloves"/>
+                <ref bean="shortSocks"/>
+                <ref bean="longSocks"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction8" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="8"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="cockyShorts"/>
+                <ref bean="redTrousers"/>
+                <ref bean="blackTrousers"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction9" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="9"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="justACap"/>
+                <ref bean="shortSocks"/>
+                <ref bean="ordinaryShoes"/>
+                <ref bean="justACap"/>
+                <ref bean="shortSocks"/>
+                <ref bean="longSocks"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transaction10" class="com.awin.recruitment.data.Transaction">
+        <constructor-arg name="transactionId" value="10"/>
+        <constructor-arg name="saleDate" ref="date"/>
+        <constructor-arg name="products">
+            <util:list id="array">
+                <ref bean="blackTrousers"/>
+                <ref bean="redTrousers"/>
+            </util:list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transactionsList" class="java.util.ArrayList">
+        <constructor-arg>
+            <util:list>
+                <ref bean="transaction1"/>
+                <ref bean="transaction2"/>
+                <ref bean="transaction3"/>
+                <ref bean="transaction4"/>
+                <ref bean="transaction5"/>
+                <ref bean="transaction6"/>
+                <ref bean="transaction7"/>
+                <ref bean="transaction8"/>
+                <ref bean="transaction9"/>
+                <ref bean="transaction10"/>
+            </util:list>
+        </constructor-arg>
+
+    </bean>
+
 
 </beans>

@@ -17,6 +17,7 @@ This is a simple stub of recruitment application
 ## Output Example:
 
 `Consumed: transaction ID: 1`
+
 `Produced: transaction ID: 1, products total cost: 400.50`
 `Consumed: transaction ID: 2`
 `Produced: transaction ID: 2, products total cost: 460.48`

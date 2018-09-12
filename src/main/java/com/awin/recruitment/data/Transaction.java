@@ -42,12 +42,15 @@ public class Transaction {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (this.getClass() != o.getClass()) return false;
-        Transaction that = (Transaction) o;
-        return Objects.equals(getTransactionId(), that.getTransactionId()) &&
-                Objects.equals(getSaleDate(), that.getSaleDate()) &&
-                getProducts().equals(that.getProducts());
+
+        if (o != null && o.getClass() == getClass()) {
+            Transaction that = (Transaction) o;
+            return Objects.equals(getTransactionId(), that.getTransactionId()) &&
+                    Objects.equals(getSaleDate(), that.getSaleDate()) &&
+                    getProducts().equals(that.getProducts());
+        }
+
+        return false;
     }
 
     @Override

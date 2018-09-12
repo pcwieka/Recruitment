@@ -18,11 +18,15 @@ public final class EnrichedTransaction extends Transaction{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (this.getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        EnrichedTransaction that = (EnrichedTransaction) o;
-        return Objects.equals(getTotalCost(), that.getTotalCost());
+
+        if (o instanceof EnrichedTransaction && super.equals(o)) {
+
+            EnrichedTransaction that = (EnrichedTransaction) o;
+            return Objects.equals(getTotalCost(), that.getTotalCost());
+
+        }
+
+        return false;
     }
 
     @Override

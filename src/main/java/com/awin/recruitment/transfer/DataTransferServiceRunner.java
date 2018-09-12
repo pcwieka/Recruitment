@@ -41,4 +41,11 @@ public class DataTransferServiceRunner<T> {
 
     }
 
+    public Consumer<T> getConsumer() {
+        return consumer;
+    }
+
+    public Producer<T> getProducer() {
+        return producer;
+    }
 }

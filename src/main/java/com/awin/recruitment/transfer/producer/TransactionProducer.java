@@ -1,8 +1,8 @@
 package com.awin.recruitment.transfer.producer;
 
 import com.awin.recruitment.data.EnrichedTransaction;
-import com.awin.recruitment.data.Product;
 import com.awin.recruitment.data.Transaction;
+import com.awin.recruitment.data.Product;
 import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -10,12 +10,12 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TransactionProducer implements Producer<Transaction>,Runnable{
+public class TransactionProducer implements Producer<EnrichedTransaction>,Runnable{
 
     private Long transactionsExitId;
     private Integer threadSleepMillis;
     private BlockingQueue<Transaction> transactionQueue;
-    private final Queue<Transaction> outputTransactions = new LinkedList<>();
+    private final Queue<EnrichedTransaction> outputTransactions = new LinkedList<>();
     private final AtomicBoolean isProducerThreadRunning = new AtomicBoolean(false);
     private static final Logger logger = Logger.getLogger(TransactionProducer.class);
 
@@ -24,7 +24,7 @@ public class TransactionProducer implements Producer<Transaction>,Runnable{
     }
 
     @Override
-    public void produce(Iterable<Transaction> messages) {
+    public void produce(Iterable<EnrichedTransaction> messages) {
 
         try{
 
@@ -95,7 +95,7 @@ public class TransactionProducer implements Producer<Transaction>,Runnable{
         return transactionQueue;
     }
 
-    public Queue<Transaction> getOutputTransactions() {
+    public Queue<EnrichedTransaction> getOutputTransactions() {
         return outputTransactions;
     }
 }
